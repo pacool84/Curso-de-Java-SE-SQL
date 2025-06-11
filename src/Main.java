@@ -15,7 +15,7 @@ public class Main {
         ResultSet myResultSet = null;
 
         //Realizar la conexión a la base de datos
-        try{
+        try {
             myConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/project", "root", "Chevy17"); // Aquí debes colocar la URL de tu base de datos, usuario y contraseña
             System.out.println("Conexión exitosa a la base de datos!!!");
 
@@ -24,11 +24,11 @@ public class Main {
             myResultSet = myStatement.executeQuery("SELECT * FROM employees"); // Ejecutar una consulta SQL para obtener datos de la tabla "employees"
 
             //Procesar los resultados de la consulta
-            while(myResultSet.next()) {
+            while (myResultSet.next()) {
                 System.out.println(myResultSet.getString("first_name"));// Imprimir el valor de la columna "first_name" de cada fila
                 System.out.println();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error al conectarse a la base de datos :( ");
         }
