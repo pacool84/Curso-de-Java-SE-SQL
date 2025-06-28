@@ -76,13 +76,13 @@ public class Employee {
     // Método toString para representar el objeto Employee como una cadena
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", first_name='" + first_name + '\'' +
-                ", pa_surname='" + pa_surname + '\'' +
-                ", ma_surname='" + ma_surname + '\'' +
-                ", email='" + email + '\'' +
-                ", salary=" + salary +
-                '}';
+        return "\n==== Employee Details ====" +
+               "\n🆔 ID: " + id +
+               "\n👤 Name: " + first_name +
+               "\n📝 Paternal Surname: " + pa_surname +
+               "\n📝 Maternal Surname: " + ma_surname +
+               "\n📧 Email: " + email +
+               "\n💰 Salary: $" + String.format("%.2f", salary) +
+               "\n========================";
     }
 }
