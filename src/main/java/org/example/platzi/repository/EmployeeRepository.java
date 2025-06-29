@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Clase EmployeeRepository que implementa la interfaz Repository para manejar objetos Employee
-//Aqui esta el concepto de IMPLEMENTACION DE INTERFACES, que permite que una clase implemente los métodos definidos en una interfaz.
+//Aquí está el concepto de IMPLEMENTACIÓN DE INTERFACES, que permite que una clase implemente los métodos definidos en una interfaz.
 
 public class EmployeeRepository implements Repository <Employee> {
     // Atributo para almacenar la conexión a la base de datos
@@ -47,7 +47,21 @@ public class EmployeeRepository implements Repository <Employee> {
     }
 
     @Override
-    public void save(Employee employee) {
+    public void save(Employee employee) throws SQLException {
+        String sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
+
+        try (PreparedStatement myPreparedStatement = getConnection().prepareStatement(sql)) {
+            myPreparedStatement.setString(1, employee.getFirst_name());
+            myPreparedStatement.setString(2, employee.getPa_surname());
+            myPreparedStatement.setString(3, employee.getMa_surname());
+            myPreparedStatement.setString(4, employee.getEmail());
+            myPreparedStatement.setFloat(5, employee.getSalary());
+
+            myPreparedStatement.executeUpdate(); // Ejecutar la inserción
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al guardar el empleado: " + e.getMessage());
+        }
 
     }
 
