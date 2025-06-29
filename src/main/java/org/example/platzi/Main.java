@@ -15,7 +15,10 @@ public class Main {
         //Al hacerlo de esta forma aplicamos el concepto de AutoCloseable, para poder cerrar automáticamente los recursos utilizados (Connection, Statement, ResultSet) al finalizar el bloque try.
         try (Connection myConnection = DataBaseConnection.getInstance()) { //1.- Realizar la conexión a la base de datos
             Repository<Employee> repository = new EmployeeRepository(); //2.- Crear una instancia del repositorio de empleados
-            repository.findAll().forEach(System.out::println); //3.- Obtener todos los empleados y mostrarlos por consola
+           // repository.findAll().forEach(System.out::println); //3.- Obtener todos los empleados y mostrarlos por consola
+
+            System.out.println("---------------------------------");
+            System.out.println("Obteniendo un empleado por ID: 1" + repository.getById(8)); //4.- Obtener un empleado por su ID y mostrarlo por consola
         }
     }
 }

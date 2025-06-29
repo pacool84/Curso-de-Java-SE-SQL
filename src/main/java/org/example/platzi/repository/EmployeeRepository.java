@@ -38,6 +38,7 @@ public class EmployeeRepository implements Repository <Employee> {
                 if(myResultSet.next()){
                     myEmployee = createEmployee(myResultSet); // Crear el objeto Employee a partir del ResultSet
                 } else {
+                    System.out.println("IDが見つかりませんでした: " + id);
                     System.out.println("No se encontró un empleado con el ID: " + id);
                 }
             }
