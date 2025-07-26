@@ -14,7 +14,7 @@ public class EmployeeRepository implements Repository <Employee> {
     // Atributo para almacenar la conexión a la base de datos
 private Connection myConnection;
 
-public EmployeeRepository(Connection, myConnection) {
+public EmployeeRepository(Connection myConnection) {
     this.myConnection = myConnection; // Inicializar la conexión a la base de datos
 }
 // Implementación de los métodos de la interfaz Repository para la clase Employee
