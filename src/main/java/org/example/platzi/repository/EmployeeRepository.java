@@ -48,7 +48,16 @@ public class EmployeeRepository implements Repository <Employee> {
 
     @Override
     public void save(Employee employee) throws SQLException {
-        String sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
+
+        String sql;
+//        if(employee.getId() != null && employee.getId() > 0) {
+//            sql = "UPDATE employees SET first_name = ?, pa_surname = ?, ma_surname = ?, email = ?, salary = ? WHERE id = ?"; // Consulta SQL para actualizar un empleado existente
+//        } else {
+//            employee.setId(null); // Asegurarse de que el ID sea nulo para una nueva inserción
+//            sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
+//        }
+
+        sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
 
         try (PreparedStatement myPreparedStatement = getConnection().prepareStatement(sql)) {
             myPreparedStatement.setString(1, employee.getFirst_name());
@@ -66,7 +75,21 @@ public class EmployeeRepository implements Repository <Employee> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws SQLException {
+       String sql = "DELETE FROM employees WHERE id = ?"; // Consulta SQL para eliminar un empleado por su ID
+
+        try(PreparedStatement myPreparedStatement = getConnection().prepareStatement(sql)) {
+            myPreparedStatement.setInt(1, id); // Establecer el valor del parámetro en la consulta SQL
+            int rowsAffected = myPreparedStatement.executeUpdate(); // Ejecutar la eliminación
+            if (rowsAffected > 0) {
+                System.out.println("Empleado eliminado exitosamente con ID: " + id);
+            } else {
+                System.out.println("No se encontró un empleado con el ID: " + id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al eliminar el empleado: " + e.getMessage());
+        }
 
     }
 
