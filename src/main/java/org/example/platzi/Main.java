@@ -55,7 +55,7 @@ public class Main {
                 Repository<Employee> repository = new EmployeeRepository(myConnection);
                 Employee employee = new Employee();
                 employee.setFirst_name("America");
-                employeesetPa_surname("Gonzalez");
+                employee.setPa_surname("Gonzalez");
                 employee.setMa_surname("Lopez");
                 employee.setEmail("a.gonzalez@outlook.com");
                 employee.setSalary(15000.0F);

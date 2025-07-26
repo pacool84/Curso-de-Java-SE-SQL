@@ -52,14 +52,11 @@ public EmployeeRepository(Connection myConnection) {
     public void save(Employee employee) throws SQLException {
 
         String sql;
-        if(employee.getId() != null && employee.getId() > 0) {
+        if(employee.getId() > 0) {
             sql = "UPDATE employees SET first_name = ?, pa_surname = ?, ma_surname = ?, email = ?, salary = ?, curp = ? WHERE id = ?"; // Consulta SQL para actualizar un empleado existente
         } else {
-            employee.setId(null); // Asegurarse de que el ID sea nulo para una nueva inserción
             sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary, curp) VALUES (?, ?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
         }
-
-        sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary, curp) VALUES (?, ?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
 
         try (PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
             myPreparedStatement.setString(1, employee.getFirst_name());
@@ -69,7 +66,7 @@ public EmployeeRepository(Connection myConnection) {
             myPreparedStatement.setFloat(5, employee.getSalary());
             myPreparedStatement.setString(6, employee.getCurp());
 
-            if (employee.getId() != null && employee.getId() > 0) {
+            if (employee.getId() > 0) {
                 myPreparedStatement.setInt(7, employee.getId()); // Establecer el ID del empleado para la actualización
             }
 
