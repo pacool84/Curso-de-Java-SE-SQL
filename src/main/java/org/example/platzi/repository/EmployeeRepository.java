@@ -71,6 +71,9 @@ public EmployeeRepository(Connection myConnection) {
             }
 
             myPreparedStatement.executeUpdate(); // Ejecutar la inserción
+            System.out.println("従業員が正常に保存されました。"); // Mensaje en japonés
+            System.out.println("Empleado guardado exitosamente."); // Mensaje en español
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error al guardar el empleado: " + e.getMessage());
