@@ -12,15 +12,17 @@ import java.util.List;
 
 public class EmployeeRepository implements Repository <Employee> {
     // Atributo para almacenar la conexión a la base de datos
-    private Connection getConnection() throws SQLException {
-        return DataBaseConnection.getInstance();
-    }
+private Connection myConnection;
+
+public EmployeeRepository(Connection, myConnection) {
+    this.myConnection = myConnection; // Inicializar la conexión a la base de datos
+}
 // Implementación de los métodos de la interfaz Repository para la clase Employee
     @Override // Método para obtener todos los registros de la base de datos
     public List<Employee> findAll() throws SQLException {
         List <Employee> employees = new ArrayList<>();
 
-        try(Statement myStatement = getConnection().createStatement();
+        try(Statement myStatement = myConnection.createStatement();
         ResultSet myResultSet = myStatement.executeQuery("SELECT * FROM employees")){
             while(myResultSet.next()){
                 Employee myEmployee = createEmployee(myResultSet); // Crear el objeto Employee a partir del ResultSet
@@ -32,7 +34,7 @@ public class EmployeeRepository implements Repository <Employee> {
     @Override // Método para obtener un registro por su ID
     public Employee getById(Integer id) throws SQLException {
         Employee myEmployee = null;
-        try(PreparedStatement myPreparedStatement = getConnection().prepareStatement("SELECT * FROM employees WHERE id = ?")){
+        try(PreparedStatement myPreparedStatement = myConnection.prepareStatement("SELECT * FROM employees WHERE id = ?")){
             myPreparedStatement.setInt(1, id); // Establecer el valor del parámetro en la consulta SQL
             try(ResultSet myResultSet = myPreparedStatement.executeQuery()) {
                 if(myResultSet.next()){
@@ -50,21 +52,26 @@ public class EmployeeRepository implements Repository <Employee> {
     public void save(Employee employee) throws SQLException {
 
         String sql;
-//        if(employee.getId() != null && employee.getId() > 0) {
-//            sql = "UPDATE employees SET first_name = ?, pa_surname = ?, ma_surname = ?, email = ?, salary = ? WHERE id = ?"; // Consulta SQL para actualizar un empleado existente
-//        } else {
-//            employee.setId(null); // Asegurarse de que el ID sea nulo para una nueva inserción
-//            sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
-//        }
+        if(employee.getId() != null && employee.getId() > 0) {
+            sql = "UPDATE employees SET first_name = ?, pa_surname = ?, ma_surname = ?, email = ?, salary = ?, curp = ? WHERE id = ?"; // Consulta SQL para actualizar un empleado existente
+        } else {
+            employee.setId(null); // Asegurarse de que el ID sea nulo para una nueva inserción
+            sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary, curp) VALUES (?, ?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
+        }
 
-        sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary) VALUES (?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
+        sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary, curp) VALUES (?, ?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
 
-        try (PreparedStatement myPreparedStatement = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
             myPreparedStatement.setString(1, employee.getFirst_name());
             myPreparedStatement.setString(2, employee.getPa_surname());
             myPreparedStatement.setString(3, employee.getMa_surname());
             myPreparedStatement.setString(4, employee.getEmail());
             myPreparedStatement.setFloat(5, employee.getSalary());
+            myPreparedStatement.setString(6, employee.getCurp());
+
+            if (employee.getId() != null && employee.getId() > 0) {
+                myPreparedStatement.setInt(7, employee.getId()); // Establecer el ID del empleado para la actualización
+            }
 
             myPreparedStatement.executeUpdate(); // Ejecutar la inserción
         } catch (SQLException e) {
@@ -78,7 +85,7 @@ public class EmployeeRepository implements Repository <Employee> {
     public void delete(Integer id) throws SQLException {
        String sql = "DELETE FROM employees WHERE id = ?"; // Consulta SQL para eliminar un empleado por su ID
 
-        try(PreparedStatement myPreparedStatement = getConnection().prepareStatement(sql)) {
+        try(PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
             myPreparedStatement.setInt(1, id); // Establecer el valor del parámetro en la consulta SQL
             int rowsAffected = myPreparedStatement.executeUpdate(); // Ejecutar la eliminación
             if (rowsAffected > 0) {
@@ -101,6 +108,7 @@ public class EmployeeRepository implements Repository <Employee> {
         myEmployee.setMa_surname(myResultSet.getString("ma_surname"));
         myEmployee.setEmail(myResultSet.getString("email"));
         myEmployee.setSalary(myResultSet.getFloat("salary"));
+        myEmployee.setCurp(myResultSet.getString("curp"));
 
         return myEmployee; // Retorna el objeto Employee creado a partir del ResultSet
     }

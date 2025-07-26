@@ -9,19 +9,21 @@ public class Employee {
     private String ma_surname;
     private String email;
     private Float salary;
+    private String curp;
 
     // Constructor de la clase Employee
     public Employee() {
 
     }
 
-    public Employee (int id, String first_name, String pa_surname, String ma_surname, String email, Float salary) {
+    public Employee (int id, String first_name, String pa_surname, String ma_surname, String email, Float salary, String curp) {
         this.id = id;
         this.first_name = first_name;
         this.pa_surname = pa_surname;
         this.ma_surname = ma_surname;
         this.email = email;
         this.salary = salary;
+        this.curp = curp;
     }
 
     // Getters y Setters para acceder y modificar los atributos
@@ -73,6 +75,14 @@ public class Employee {
         this.salary = salary;
     }
 
+    public String getCurp() {
+        return curp;
+    }
+
+    public void setCurp(String curp) {
+        this.curp = curp;
+    }
+
     // Método toString para representar el objeto Employee como una cadena
     @Override
     public String toString() {
@@ -83,6 +93,7 @@ public class Employee {
                "\n📝 母方の姓: " + ma_surname +
                "\n📧 メール: " + email +
                "\n💰 給料: ¥" + String.format("%.2f", salary) +
+               "\n🔖 ＣＵＲＰ: " + curp +
                "\n========================";
     }
 }

@@ -4,7 +4,7 @@ import org.example.platzi.model.Employee;
 import org.example.platzi.repository.EmployeeRepository;
 import org.example.platzi.repository.Repository;
 import org.example.platzi.util.DataBaseConnection;
-import org.example.platzi.view.SwingApp;
+//import org.example.platzi.view.SwingApp;
 
 import java.sql.*;
 
@@ -43,7 +43,31 @@ public class Main {
 //            repository.delete(14);
 //
 //        }
-        SwingApp app = new SwingApp();//Crear una instancia de la aplicación Swing
-        app.setVisible(true); //Hacer visible la aplicación Swing
+//        SwingApp app = new SwingApp();//Crear una instancia de la aplicación Swing
+//        app.setVisible(true); //Hacer visible la aplicación Swing
+
+        try(Connection myConnection = DataBaseConnection.getInstance()) {
+
+            if(myConnection.getAutoCommit()){
+                myConnection.setAutoCommit(false); // Desactivar el autocommit para manejar transacciones manualmente
+            }
+            try {
+                Repository<Employee> repository = new EmployeeRepository(myConnection);
+                Employee employee = new Employee();
+                employee.setFirst_name("America");
+                employeesetPa_surname("Gonzalez");
+                employee.setMa_surname("Lopez");
+                employee.setEmail("a.gonzalez@outlook.com");
+                employee.setSalary(15000.0F);
+                employee.setCurp("GOLA010101HDFLPA09");
+                repository.save(employee); // Guardar el nuevo empleado en la base de datos
+
+                myConnection.commit(); // Confirmar la transacción
+
+            } catch (SQLException e) {
+                myConnection.rollback(); // Revertir la transacción en caso de error
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
