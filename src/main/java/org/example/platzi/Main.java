@@ -46,28 +46,35 @@ public class Main {
 //        SwingApp app = new SwingApp();//Crear una instancia de la aplicación Swing
 //        app.setVisible(true); //Hacer visible la aplicación Swing
 
-        try(Connection myConnection = DataBaseConnection.getInstance()) {
+//        try(Connection myConnection = DataBaseConnection.getInstance()) {
+//
+//            if(myConnection.getAutoCommit()){
+//                myConnection.setAutoCommit(false); // Desactivar el autocommit para manejar transacciones manualmente
+//            }
+//            try {
+//                Repository<Employee> repository = new EmployeeRepository(myConnection);
+//                Employee employee = new Employee();
+//                employee.setFirst_name("America");
+//                employee.setPa_surname("Gonzalez");
+//                employee.setMa_surname("Lopez");
+//                employee.setEmail("a.gonzalez@outlook.com");
+//                employee.setSalary(15000.0F);
+//                employee.setCurp("GOLA010101HDFLPA09");
+//                repository.save(employee); // Guardar el nuevo empleado en la base de datos
+//
+//                myConnection.commit(); // Confirmar la transacción
+//
+//            } catch (SQLException e) {
+//                myConnection.rollback(); // Revertir la transacción en caso de error
+//                throw new RuntimeException(e);
+//            }
+//        }
+        System.out.println("-----------------Obteniendo todos los empleados-----------------");
+        Repository <Employee> repository = new EmployeeRepository();
+        repository.findAll().forEach(System.out::println); // Obtener todos los empleados y mostrarlos por consola
 
-            if(myConnection.getAutoCommit()){
-                myConnection.setAutoCommit(false); // Desactivar el autocommit para manejar transacciones manualmente
-            }
-            try {
-                Repository<Employee> repository = new EmployeeRepository(myConnection);
-                Employee employee = new Employee();
-                employee.setFirst_name("America");
-                employee.setPa_surname("Gonzalez");
-                employee.setMa_surname("Lopez");
-                employee.setEmail("a.gonzalez@outlook.com");
-                employee.setSalary(15000.0F);
-                employee.setCurp("GOLA010101HDFLPA09");
-                repository.save(employee); // Guardar el nuevo empleado en la base de datos
+        System.out.println("-----------------Obteniendo un empleado por ID-----------------");
+        System.out.println("Obteniendo un empleado por ID: " + repository.getById(4)); // Obtener un empleado por su ID y mostrarlo por consola
 
-                myConnection.commit(); // Confirmar la transacción
-
-            } catch (SQLException e) {
-                myConnection.rollback(); // Revertir la transacción en caso de error
-                throw new RuntimeException(e);
-            }
-        }
     }
 }

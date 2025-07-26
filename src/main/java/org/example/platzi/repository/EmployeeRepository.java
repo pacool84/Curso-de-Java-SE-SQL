@@ -12,18 +12,19 @@ import java.util.List;
 
 public class EmployeeRepository implements Repository <Employee> {
     // Atributo para almacenar la conexión a la base de datos
-private Connection myConnection;
 
-public EmployeeRepository(Connection myConnection) {
-    this.myConnection = myConnection; // Inicializar la conexión a la base de datos
+private Connection getMyConnection() throws SQLException {
+    return DataBaseConnection.getConnection(); // Obtener la conexión a la base de datos desde la clase DataBaseConnection
 }
+
 // Implementación de los métodos de la interfaz Repository para la clase Employee
     @Override // Método para obtener todos los registros de la base de datos
     public List<Employee> findAll() throws SQLException {
         List <Employee> employees = new ArrayList<>();
 
-        try(Statement myStatement = myConnection.createStatement();
-        ResultSet myResultSet = myStatement.executeQuery("SELECT * FROM employees")){
+        try(Connection myConnection = getMyConnection(); // Obtener la conexión a la base de datos
+            Statement myStatement = myConnection.createStatement(); // Crear un objeto Statement para ejecutar consultas SQL
+            ResultSet myResultSet = myStatement.executeQuery("SELECT * FROM employees")){
             while(myResultSet.next()){
                 Employee myEmployee = createEmployee(myResultSet); // Crear el objeto Employee a partir del ResultSet
                 employees.add(myEmployee); // Agregar el objeto Employee a la lista
@@ -31,11 +32,14 @@ public EmployeeRepository(Connection myConnection) {
         }
         return employees;
     }
+
     @Override // Método para obtener un registro por su ID
     public Employee getById(Integer id) throws SQLException {
         Employee myEmployee = null;
-        try(PreparedStatement myPreparedStatement = myConnection.prepareStatement("SELECT * FROM employees WHERE id = ?")){
+        try(Connection myConnection = getMyConnection(); // Obtener la conexión a la base de datos
+            PreparedStatement myPreparedStatement = myConnection.prepareStatement("SELECT * FROM employees WHERE id = ?")){
             myPreparedStatement.setInt(1, id); // Establecer el valor del parámetro en la consulta SQL
+
             try(ResultSet myResultSet = myPreparedStatement.executeQuery()) {
                 if(myResultSet.next()){
                     myEmployee = createEmployee(myResultSet); // Crear el objeto Employee a partir del ResultSet
@@ -58,7 +62,8 @@ public EmployeeRepository(Connection myConnection) {
             sql = "INSERT INTO employees (first_name, pa_surname, ma_surname, email, salary, curp) VALUES (?, ?, ?, ?, ?, ?)"; // Consulta SQL para insertar un nuevo empleado
         }
 
-        try (PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
+        try (Connection myConnection = getMyConnection(); // Obtener la conexión a la base de datos
+             PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
             myPreparedStatement.setString(1, employee.getFirst_name());
             myPreparedStatement.setString(2, employee.getPa_surname());
             myPreparedStatement.setString(3, employee.getMa_surname());
@@ -85,9 +90,11 @@ public EmployeeRepository(Connection myConnection) {
     public void delete(Integer id) throws SQLException {
        String sql = "DELETE FROM employees WHERE id = ?"; // Consulta SQL para eliminar un empleado por su ID
 
-        try(PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
+        try(Connection myConnection = getMyConnection(); // Obtener la conexión a la base de datos
+            PreparedStatement myPreparedStatement = myConnection.prepareStatement(sql)) {
             myPreparedStatement.setInt(1, id); // Establecer el valor del parámetro en la consulta SQL
             int rowsAffected = myPreparedStatement.executeUpdate(); // Ejecutar la eliminación
+
             if (rowsAffected > 0) {
                 System.out.println("Empleado eliminado exitosamente con ID: " + id);
             } else {
